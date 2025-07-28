@@ -1,0 +1,34 @@
+import pandas as pd
+import os
+
+# List of CSV files in the data folder
+data_folder = "data"
+csv_files = [f for f in os.listdir(data_folder) if f.endswith('.csv')]
+
+# Empty list to collect DataFrames
+df_list = []
+
+# Process each file
+for file in csv_files:
+    path = os.path.join(data_folder, file)
+    df = pd.read_csv(path)
+
+    # Filter only "Pink Morsel" products
+    df = df[df['product'] == 'Pink Morsel']
+
+    # Create new 'sales' column
+    df['sales'] = df['quantity'] * df['price']
+
+    # Keep only needed columns
+    df = df[['sales', 'date', 'region']]
+
+    df_list.append(df)
+
+# Combine all data into one DataFrame
+combined_df = pd.concat(df_list)
+
+# Save to new CSV
+output_path = "formatted_sales_data.csv"
+combined_df.to_csv(output_path, index=False)
+
+print(f"Formatted data saved to {output_path}")
