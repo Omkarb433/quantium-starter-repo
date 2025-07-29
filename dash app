@@ -1,0 +1,32 @@
+import dash
+from dash import dcc, html
+import plotly.express as px
+
+# Initialize app
+app = dash.Dash(__name__)
+app.title = "Sales Visualiser"
+
+# Load your cleaned data
+# Assume df is the DataFrame created in step 1
+
+# Create the line chart
+fig = px.line(df, x='Date', y='Sales', title='Sales Over Time')
+fig.add_vline(x='2021-01-15', line_dash='dash', line_color='red',
+              annotation_text='Price Increase', annotation_position='top right')
+
+# Layout
+app.layout = html.Div(children=[
+    html.H1(children='Soul Foods Sales Visualiser', style={'textAlign': 'center'}),
+    
+    dcc.Graph(
+        id='sales-line-chart',
+        figure=fig
+    ),
+    
+    html.Div(children='This line chart shows how sales changed before and after the Pink Morsel price increase on January 15, 2021.', 
+             style={'textAlign': 'center', 'padding': '10px'})
+])
+
+# Run app
+if __name__ == '__main__':
+    app.run_server(debug=True)
